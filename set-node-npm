@@ -7,9 +7,9 @@ NODE_VERSION='4.4.0'
 NPM_VERSION='2.14.22'
 
 install_node() {
-  source "$HOME/nvm/nvm.sh"
-  nvm install "v$NODE_VERSION"
-  nvm alias default "v$NODE_VERSION"
+    source "$HOME/nvm/nvm.sh"
+    nvm install "v$NODE_VERSION"
+    nvm alias default "v$NODE_VERSION"
 }
 
 # Node v4.4.0 comes with an old NPM. We want a newer version, so let's install
@@ -19,25 +19,29 @@ install_node() {
 # pulls from /home/ubuntu/nvm/v$NODE_VERSION/lib/node_modules - so go to the
 # lib directory and install a newer NPM.
 upgrade_npm() {
-  printf '\033[95mInstalling dependencies... may take 2-3 minutes if uncached.\033[0m\n'
-  pushd "$(dirname $(which npm))/../lib"
-    npm install "npm@$NPM_VERSION"
-  popd
+    if [[ "$NODE_MODULES_CACHE" == 'false' ]]; then
+        rm -rf "$HOME/$CIRCLE_PROJECT_REPONAME/node_modules"
+    fi
+
+    printf '\033[95mInstalling dependencies... may take 2-3 minutes if uncached.\033[0m\n'
+    pushd "$(dirname $(which npm))/../lib"
+        npm install "npm@$NPM_VERSION"
+    popd
 }
 
 main() {
 
-  install_node
-  upgrade_npm
+    install_node
+    upgrade_npm
 
-  node --version
-  npm --version
+    node --version
+    npm --version
 
-  if npm --loglevel verbose install > npm-install.log 2>&1 ; then
-    printf '\033[95mAll dependencies installed!\033[0m'
-  else
-    tail -n2000 npm-install.log
-    exit 1
-  fi
+    if npm --loglevel verbose install > npm-install.log 2>&1 ; then
+        printf '\033[95mAll dependencies installed!\033[0m'
+    else
+        tail -n2000 npm-install.log
+        exit 1
+    fi
 }
 main
