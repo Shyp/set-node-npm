@@ -6,8 +6,15 @@ set -eo pipefail
 NODE_VERSION='4.4.0'
 NPM_VERSION='2.14.22'
 
+get_ubuntu_release() {
+    lsb_release --codename --short
+}
+
 install_node() {
-    source "$HOME/nvm/nvm.sh"
+    if [[ $(get_ubuntu_release) == "precise" ]]; then
+        source "$HOME/nvm/nvm.sh"
+    fi
+    # On trusty/Ubuntu 14, nvm is available in the environment
     nvm install "v$NODE_VERSION"
     nvm alias default "v$NODE_VERSION"
 }
@@ -30,7 +37,6 @@ upgrade_npm() {
 }
 
 main() {
-
     install_node
     upgrade_npm
 
