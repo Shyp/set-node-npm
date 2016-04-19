@@ -13,6 +13,8 @@ get_ubuntu_release() {
 install_node() {
     if [[ $(get_ubuntu_release) == "precise" ]]; then
         source "$HOME/nvm/nvm.sh"
+    else
+        source "/opt/circleci/.nvm/nvm.sh"
     fi
     # On trusty/Ubuntu 14, nvm is available in the environment
     nvm install "v$NODE_VERSION"
