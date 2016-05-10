@@ -3,8 +3,8 @@
 set -eo pipefail
 
 # XXX figure out a better way to specify these.
-NODE_VERSION='4.4.0'
-NPM_VERSION='2.14.22'
+NODE_VERSION='4.4.4'
+NPM_VERSION='2.15.5'
 
 get_ubuntu_release() {
     lsb_release --codename --short
