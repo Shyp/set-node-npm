@@ -3,8 +3,8 @@
 set -eo pipefail
 
 # XXX figure out a better way to specify these.
-NODE_VERSION='4.4.4'
-NPM_VERSION='2.15.5'
+NODE_VERSION='5.0.0'
+NPM_VERSION='3.3.6'
 
 get_ubuntu_release() {
     lsb_release --codename --short
@@ -16,9 +16,11 @@ install_node() {
     else
         source "/opt/circleci/.nvm/nvm.sh"
     fi
+    printf 'Logging: About to install node'
     # On trusty/Ubuntu 14, nvm is available in the environment
     nvm install "v$NODE_VERSION"
     nvm alias default "v$NODE_VERSION"
+    nvm use "v$NODE_VERSION"
 }
 
 # Node v4.4.0 comes with an old NPM. We want a newer version, so let's install
@@ -45,11 +47,16 @@ main() {
     node --version
     npm --version
 
-    if npm --loglevel verbose install > npm-install.log 2>&1 ; then
-        printf '\033[95mAll dependencies installed!\033[0m'
-    else
-        tail -n2000 npm-install.log
-        exit 1
-    fi
+    printf "which node \n"
+    which node
+
+    yarn
+
+    # if npm --loglevel verbose install > npm-install.log 2>&1 ; then
+    #     printf '\033[95mAll dependencies installed!\033[0m'
+    # else
+    #     tail -n2000 npm-install.log
+    #     exit 1
+    # fi
 }
 main
