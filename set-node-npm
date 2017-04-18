@@ -47,9 +47,6 @@ main() {
     node --version
     npm --version
 
-    printf "which node \n"
-    which node
-
     yarn
 
     # if npm --loglevel verbose install > npm-install.log 2>&1 ; then
