@@ -3,8 +3,8 @@
 set -eo pipefail
 
 # XXX figure out a better way to specify these.
-NODE_VERSION='5.0.0'
-NPM_VERSION='3.3.6'
+NODE_VERSION='6.10.2'
+NPM_VERSION='3.10.10'
 
 get_ubuntu_release() {
     lsb_release --codename --short
@@ -23,26 +23,8 @@ install_node() {
     nvm use "v$NODE_VERSION"
 }
 
-# Node v4.4.0 comes with an old NPM. We want a newer version, so let's install
-# that.
-#
-# nvm sets the NPM alias to /home/ubuntu/nvm/v$NODE_VERSION/bin/npm, which
-# pulls from /home/ubuntu/nvm/v$NODE_VERSION/lib/node_modules - so go to the
-# lib directory and install a newer NPM.
-upgrade_npm() {
-    if [[ "$NODE_MODULES_CACHE" == 'false' ]]; then
-        rm -rf "$HOME/$CIRCLE_PROJECT_REPONAME/node_modules"
-    fi
-
-    printf '\033[95mInstalling dependencies... may take 2-3 minutes if uncached.\033[0m\n'
-    pushd "$(dirname $(which npm))/../lib"
-        npm install "npm@$NPM_VERSION"
-    popd
-}
-
 main() {
     install_node
-    upgrade_npm
 
     node --version
     npm --version
